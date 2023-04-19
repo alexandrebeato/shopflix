@@ -2,7 +2,6 @@
   <img alt="logo" src="logo.png" /> 
 </p>
 
-
 # Overview
 
 This shopping list application aims to provide an easy and efficient solution for managing personal shopping lists. The application will be developed using #TBD for the back-end, #TBD for the front-end, #TBD for mobile, and #TBD as database. The project will be split into several parts to facilitate collaboration and development.
@@ -35,7 +34,7 @@ The application's architecture will be divided into three main layers:
 - Implement authentication and authorization.
 - Implement forms for:
   - User registration and login.
-  - Creation, update, deletion and complete of shopping list items.
+  - Creation, delete and complete of shopping list items.
 
 ## Mobile (#TBD)
 
@@ -46,7 +45,7 @@ The application's architecture will be divided into three main layers:
 - Implement authentication and authorization.
 - Implement screens for:
   - User registration and login.
-  - Creation, update, deletion and complete of shopping list items.
+  - Creation, delete and complete of shopping list items.
 
 ## Database (#TBD)
 
@@ -57,6 +56,161 @@ The application's architecture will be divided into three main layers:
 # Final challenge: Dockerization
 
 Docker is a platform that allows developers to create, deploy, and run applications in containers. Containers package up an application with everything it needs to run consistently across various environments. Dockerizing the shopping list application will involve creating Dockerfiles for each component (back-end, front-end, and database) and a Docker Compose file to manage multi-container deployment.
+
+# Data structure
+
+## In database
+
+Required fields are marked with an asterisk (\*).
+
+### User
+
+| Type     | Field        |
+| -------- | ------------ |
+| UUID     | Id \*        |
+| String   | Name \*      |
+| String   | Email \*     |
+| String   | Password \*  |
+| DateTime | CreatedAt \* |
+
+### Item
+
+| Type     | Field          |
+| -------- | -------------- |
+| UUID     | Id \*          |
+| UUID     | UserId \*      |
+| String   | Description \* |
+| Decimal  | Quantity \*    |
+| Boolean  | IsPurchased \* |
+| DateTime | CreatedAt \*   |
+| DateTime | PurchasedAt    |
+| String   | Image          |
+
+## Endpoints
+
+### User
+
+#### Register (POST) - /users/register
+
+```jsonc
+// Request
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+
+// Response
+{
+    "token": "string",
+    "user": {
+        "id": "string",
+        "name": "string",
+        "email": "string",
+        "createdAt": "string"
+    }
+}
+```
+
+#### Login (POST) - /users/login
+
+```jsonc
+// Request
+{
+  "email": "string",
+  "password": "string"
+}
+// Response
+{
+    "token": "string",
+    "user": {
+        "id": "string",
+        "name": "string",
+        "email": "string",
+        "createdAt": "string"
+    }
+}
+```
+
+### Item
+
+#### Create (POST) - /items
+
+```jsonc
+// Header
+Authorization: Bearer <token>
+
+// Request
+{
+  "description": "string",
+  "quantity": 0.0,
+  "image": "string"
+}
+
+// Response
+{
+    "id": "string",
+    "userId": "string",
+    "description": "string",
+    "quantity": 0.0,
+    "isPurchased": false,
+    "createdAt": "string",
+    "purchasedAt": "null",
+    "image": "string"
+}
+```
+
+#### Get my all items (GET) - /items
+
+```jsonc
+// Header
+Authorization: Bearer <token>
+
+// Response
+[
+    {
+        "id": "string",
+        "userId": "string",
+        "description": "string",
+        "quantity": 0.0,
+        "isPurchased": false,
+        "createdAt": "string",
+        "purchasedAt": "null",
+        "image": "string"
+    }
+]
+```
+
+#### Purchase (POST) - /items/purchase
+
+```jsonc
+// Header
+Authorization: Bearer <token>
+
+// Request
+{
+  "id": "string"
+}
+
+// Response
+{
+    "id": "string",
+    "userId": "string",
+    "description": "string",
+    "quantity": 0.0,
+    "isPurchased": true,
+    "createdAt": "string",
+    "purchasedAt": "string",
+    "image": "string"
+}
+```
+
+#### Delete (DELETE) - /items/{id}
+
+```jsonc
+// Header
+Authorization: Bearer <token>
+```
 
 # Contributing
 
