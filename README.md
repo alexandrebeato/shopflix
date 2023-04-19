@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="logo" src="logo.png" /> 
+  <img alt="logo" src="shopflix.png" /> 
 </p>
 
 # Overview
