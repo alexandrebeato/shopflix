@@ -4,19 +4,19 @@
 
 # Overview
 
-This shopping list application aims to provide an easy and efficient solution for managing personal shopping lists. The application will be developed using #TBD for the back-end, #TBD for the front-end, #TBD for mobile, and #TBD as database. The project will be split into several parts to facilitate collaboration and development.
+This shopping list application aims to provide an easy and efficient solution for managing personal shopping lists. The application will be developed using .NET for the back-end, React for the front-end, Flutter for mobile, and SQL Server as database. The project will be split into several parts to facilitate collaboration and development.
 
 # Architecture
 
 The application's architecture will be divided into three main layers:
 
-- **Back-end (API):** Developed using #TBD, it will be responsible for managing business logic, processing requests, and interacting with the database.
-- **Front-end (Web):** Developed with #TBD, it will provide a responsive and appealing user interface for users to interact with the application.
-- **Mobile**: Developed with #TBD, it will enable access to the application through mobile devices (Android and iOS).
+- **Back-end (API):** Developed using .NET, it will be responsible for managing business logic, processing requests, and interacting with the database.
+- **Front-end (Web):** Developed with React, it will provide a responsive and appealing user interface for users to interact with the application.
+- **Mobile**: Developed with Flutter, it will enable access to the application through mobile devices (Android and iOS).
 
 # Requirements
 
-## Back-end (#TBD)
+## Back-end (.NET)
 
 - Implement a RESTful API to manage business logic and interact with database.
 - Use the repository pattern to abstract the interaction with the database.
@@ -26,9 +26,9 @@ The application's architecture will be divided into three main layers:
   - CRUD operations for users (registration and login).
   - CRUD operations for shopping list items (creation, update, deletion, and complete).
 
-## Front-end (#TBD)
+## Front-end (React)
 
-- Create a responsive and appealing user interface using #TBD and a CSS framework (like [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/), [Tailwind CSS](https://tailwindcss.com/docs/installation), [Foundation](https://get.foundation/develop/getting-started.html)).
+- Create a responsive and appealing user interface using React and a CSS framework (like [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/), [Tailwind CSS](https://tailwindcss.com/docs/installation), [Foundation](https://get.foundation/develop/getting-started.html)).
 - Implement proper navigation and routing.
 - Integrate the API to perform back-end operations.
 - Implement authentication and authorization.
@@ -36,9 +36,9 @@ The application's architecture will be divided into three main layers:
   - User registration and login.
   - Creation, delete and complete of shopping list items.
 
-## Mobile (#TBD)
+## Mobile (Flutter)
 
-- Develop a mobile application compatible with Android and iOS using #TBD.
+- Develop a mobile application compatible with Android and iOS using Flutter.
 - Create an intuitive and responsive user interface.
 - Implement proper navigation and routing.
 - Integrate .NET API to perform back-end operations.
@@ -47,9 +47,9 @@ The application's architecture will be divided into three main layers:
   - User registration and login.
   - Creation, delete and complete of shopping list items.
 
-## Database (#TBD)
+## Database (SQL Server)
 
-- Use #TBD as a relational database.
+- Use SQL Server as a relational database.
 - Define data schemas and models for users and shopping list items.
 - If necessary, create a migration script to populate the database with initial data.
 
@@ -211,6 +211,14 @@ Authorization: Bearer <token>
 // Header
 Authorization: Bearer <token>
 ```
+
+# Participants
+- [Alexandre Beato](https://github.com/alexandrebeato/)
+- [Arthur Dias](https://github.com/arthurferro)
+- [Arthur Galanti](https://github.com/arthurgalanti)
+- [Gustavo Trevisani](https://github.com/gustavojstrevisani)
+- [Ítalo Covas](https://github.com/ItaloCovas)
+- [Vinicius Victor](https://github.com/vinevictor)
 
 # Contributing
 
