@@ -6,7 +6,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint src --ext ts,tsx --max-warnings=0",
+    "prepare": "husky install",
+    "typecheck": "tsc --project tsconfig.json",
+    "format": "prettier --write .",
+    "check-format": "prettier --check ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "yarn lint"
+    ]
   },
   "dependencies": {
     "@types/node": "18.16.0",
@@ -32,6 +47,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
     "prettier": "2.8.8"
   }
 }
