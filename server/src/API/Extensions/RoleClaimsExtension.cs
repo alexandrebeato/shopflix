@@ -9,7 +9,7 @@ public static class RoleClaimsExtension
     {
         var result = new List<Claim>
         {
-            new(ClaimTypes.Name, user.Id ?? string.Empty),
+            new(ClaimTypes.Name, user.Id ?? new Guid.Empty()),
             new(ClaimTypes.Email, user.Email ?? string.Empty),
             new(ClaimTypes.GivenName, user.Name ?? string.Empty)
         };
