@@ -1,0 +1,54 @@
+{
+  "name": "shopflix-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src --ext ts,tsx --max-warnings=0",
+    "prepare": "husky install",
+    "typecheck": "tsc --project tsconfig.json",
+    "format": "prettier --write .",
+    "check-format": "prettier --check ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "yarn lint"
+    ]
+  },
+  "dependencies": {
+    "@types/node": "18.16.0",
+    "@types/react": "18.0.38",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "10.4.14",
+    "eslint": "^8.0.1",
+    "eslint-config-next": "13.3.1",
+    "next": "13.3.1",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.1",
+    "typescript": "*"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.1",
+    "prettier": "2.8.8"
+  }
+}
