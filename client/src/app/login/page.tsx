@@ -32,14 +32,10 @@ export default function Login(): JSX.Element {
           </div>
         </div>
 
-<<<<<<< HEAD
         <div className="flex items-center w-full max-w-md px-6 mx-auto relative lg:w-2/6">
           <p className="absolute top-2 right-2 left-1/2 -translate-x-1/2 text-center">
             Dark Theme
           </p>
-=======
-        <div className="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
->>>>>>> f834efb4de36041fe9a9ea4d4a15c850e65861e8
           <div className="flex-1 ">
             <div className="flex text-center flex-col items-center justify-center">
               <Image
@@ -104,11 +100,7 @@ export default function Login(): JSX.Element {
                 <div className="mt-6">
                   <button
                     onClick={() => {
-<<<<<<< HEAD
                       router.push('shoplist');
-=======
-                      router.push('register');
->>>>>>> f834efb4de36041fe9a9ea4d4a15c850e65861e8
                     }}
                     className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   >

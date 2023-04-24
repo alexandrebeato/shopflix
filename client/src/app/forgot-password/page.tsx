@@ -8,11 +8,7 @@ export default function ForgotPassword(): JSX.Element {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-r from-black to-slate-900">
-<<<<<<< HEAD
       <div className="flex-1 max-w-lg mx-auto px-4 sm:px-6 lg:px-8">
-=======
-      <div className="flex-1 max-w-screen-md mx-auto px-4 sm:px-6 lg:px-8">
->>>>>>> f834efb4de36041fe9a9ea4d4a15c850e65861e8
         <div className="flex text-center flex-col items-center justify-center">
           <Image
             src={shopflixLogo}
