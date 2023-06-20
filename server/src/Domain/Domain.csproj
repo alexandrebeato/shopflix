@@ -4,6 +4,25 @@
     <ProjectReference Include="..\Core.Domain\Core.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FLunt" Version="2.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Items\Repository\**" />
+    <Compile Remove="Users\Repository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Items\Repository\**" />
+    <EmbeddedResource Remove="Users\Repository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Items\Repository\**" />
+    <None Remove="Users\Repository\**" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,5 +1,4 @@
-using Domain.Items.Repository;
-using Domain.Users.Repository;
+using Domain.Repositories;
 using Infra.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

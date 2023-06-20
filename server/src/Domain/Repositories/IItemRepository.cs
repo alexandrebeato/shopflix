@@ -1,6 +1,7 @@
 using Core.Domain.Interfaces;
+using Domain.Items;
 
-namespace Domain.Items.Repository
+namespace Domain.Repositories
 {
     public interface IItemRepository : IRepository<Item>
     {

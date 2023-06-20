@@ -1,7 +1,8 @@
+using Domain.Repositories;
 using Domain.Users;
-using Domain.Users.Repository;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using ThirdParty.Json.LitJson;
 
 namespace Infra.Data
 {
@@ -11,5 +12,6 @@ namespace Infra.Data
 
         public Task<User> GetByEmail(string email) =>
             _mongoCollection.Find(x => x.Email == email).FirstOrDefaultAsync();
+
     }
 }

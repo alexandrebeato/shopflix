@@ -1,6 +1,7 @@
 using Core.Domain.Interfaces;
+using Domain.Users;
 
-namespace Domain.Users.Repository
+namespace Domain.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {

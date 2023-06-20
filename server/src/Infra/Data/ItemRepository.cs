@@ -1,5 +1,5 @@
 using Domain.Items;
-using Domain.Items.Repository;
+using Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 

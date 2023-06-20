@@ -26,8 +26,9 @@ namespace Domain.Items
 
         public static class Factory
         {
-            public static Item Create(Guid id, Guid userId, string description, decimal quantity, bool isPurchased, DateTime purchasedAt, string image) =>
-                new Item(id, userId, description, quantity, isPurchased, purchasedAt, image);
+            public static Item Create(Guid id, Guid userId, string description, decimal quantity, bool isPurchased,
+                DateTime purchasedAt, string image) =>
+                new(id, userId, description, quantity, isPurchased, purchasedAt, image);
 
             public static Item CreateNewItem(Guid id, Guid userId, string description, decimal quantity, string image)
                 => new()
