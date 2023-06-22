@@ -22,12 +22,13 @@ public class UserHandler :
     {
         var emailCheck = _repository.GetByEmail(command.Email).Result;
         if (emailCheck != null!)
-            return new GenericCommandResult(false,"Oops, this email already exists!", null);
+            return new GenericCommandResult(false,"Oops, this email already exists!", null, null);
         
         var user = Users.User.Factory.CreateNewUser(command.Id, command.Name, command.Email, command.Password, command.CreatedAt);
 
         _repository.Insert(user!);
         
-        return new GenericCommandResult(true, "User Registered", user);
+        return new GenericCommandResult(true, "User Registered", user,null);
     }
+
 }

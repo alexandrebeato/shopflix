@@ -6,7 +6,7 @@ namespace API.Extensions;
 
 public static class RoleClaimsExtension
 {
-    public static IEnumerable<Claim> GetClaims(this UserModel user)
+    public static IEnumerable<Claim> GetClaims(this User user)
     {
         var result = new List<Claim>
         {

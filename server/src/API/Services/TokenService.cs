@@ -12,7 +12,7 @@ namespace API.Services
 {
     public class TokenService
     {
-        public string GenerateToken(UserModel user)
+        public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(TokenConfiguration.JwtKey);

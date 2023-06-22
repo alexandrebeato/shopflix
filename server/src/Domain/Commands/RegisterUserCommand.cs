@@ -1,4 +1,5 @@
-﻿using Domain.Commands.Contracts;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Commands.Contracts;
 using Flunt.Notifications;
 using Flunt.Validations;
 
@@ -16,8 +17,13 @@ public class RegisterUserCommand :  Notifiable<Notification>, ICommand
     }
     public Guid Id { get; }
     public DateTime CreatedAt { get; }
+    [Required(ErrorMessage="Name is required")]
     public string Name { get; }
+    [Required(ErrorMessage="Email is required")]
+
     public string Email { get; } 
+    [Required(ErrorMessage="Password is required")]
+
     public string Password {get; set; }
 
     public void Validate()
