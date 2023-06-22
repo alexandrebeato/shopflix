@@ -1,7 +1,8 @@
-﻿using Flunt.Notifications;
+﻿using Domain.Commands.Contracts;
+using Flunt.Notifications;
 using Flunt.Validations;
 
-namespace Domain.Commands.Contracts;
+namespace Domain.Commands;
 
 public class RegisterUserCommand :  Notifiable<Notification>, ICommand
 {
@@ -13,11 +14,11 @@ public class RegisterUserCommand :  Notifiable<Notification>, ICommand
         Password = password;
         CreatedAt = DateTime.Now;
     }
-    public Guid Id { get; protected set; }
-    public DateTime CreatedAt { get; protected set; }
-    public string Name { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string Password {get; set; } = null!;
+    public Guid Id { get; }
+    public DateTime CreatedAt { get; }
+    public string Name { get; }
+    public string Email { get; } 
+    public string Password {get; set; }
 
     public void Validate()
     {

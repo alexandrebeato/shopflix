@@ -1,6 +1,7 @@
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
 namespace Infra.Data
@@ -10,14 +11,16 @@ namespace Infra.Data
         private readonly IConfiguration _configuration;
         private readonly IMongoClient _mongoClient;
         protected readonly IMongoCollection<T> _mongoCollection;
-
+        
         public Repository(IConfiguration configuration, IMongoClient mongoClient)
         {
+            var pack = new ConventionPack { new CamelCaseElementNameConvention() };
+            ConventionRegistry.Register("elementNameConvention", pack, x => true);
             _configuration = configuration;
             _mongoClient = mongoClient;
-            _mongoCollection = _mongoClient.GetDatabase(_configuration["mongoConnection:database"]).GetCollection<T>(typeof(T).Name);
+            _mongoCollection = _mongoClient.GetDatabase(_configuration["mongoConnection:database"]).GetCollection<T>(typeof(T).Name.ToLower());
         }
-
+        
         public Task Insert(T entity) =>
             _mongoCollection.InsertOneAsync(entity);
 

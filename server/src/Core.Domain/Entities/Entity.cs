@@ -1,4 +1,5 @@
 using Core.Domain.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Core.Domain.Entities
 {
@@ -17,7 +18,7 @@ namespace Core.Domain.Entities
             return Id.Equals(compareTo.Id);
         }
 
-        public static bool operator ==(Entity<T> a, Entity<T> b)
+        public static bool operator ==(Entity<T> a, Entity<T>? b)
         {
             if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
                 return true;

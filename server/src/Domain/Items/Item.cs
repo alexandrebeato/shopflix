@@ -18,11 +18,11 @@ namespace Domain.Items
         private Item() { }
 
         public Guid UserId { get; private set; }
-        public string Description { get; private set; }
+        public string Description { get; private set; } = null!;
         public decimal Quantity { get; private set; }
         public bool IsPurchased { get; private set; }
         public DateTime? PurchasedAt { get; private set; }
-        public string Image { get; private set; }
+        public string Image { get; private set; } = null!;
 
         public static class Factory
         {

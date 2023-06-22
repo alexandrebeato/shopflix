@@ -1,11 +1,12 @@
 using API.Models.Users;
 using AutoMapper;
-using Core.Domain.Interfaces;
 using Domain.Commands;
 using Domain.Commands.Contracts;
 using Domain.Handlers;
-using Domain.Repositories;
+using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
+using SecureIdentity.Password;
+
 
 namespace API.Controllers
 {
@@ -14,16 +15,28 @@ namespace API.Controllers
     {
         [HttpPost]
         [Route("register")]
-        
-        
-        public async Task<GenericCommandResult> Register(
+        public ICommandResult Register(
             [FromBody] RegisterUserModel model,
-            [FromServices]UserHandler handler)
+            [FromServices]UserHandler handler,
+            [FromServices]IMapper mapper)
         {
             if (!ModelState.IsValid)
-                return new GenericCommandResult(false,"Oops, looks like anything is wrong!", ModelState.ToList());
+                return new GenericCommandResult(false,"Oops, looks like anything is wrong!", null);
+
             var command = new RegisterUserCommand(model.Name, model.Email, model.Password);
-            return (GenericCommandResult)handler.Handle(command);
+            
+            command.Validate();
+            if (!command.IsValid)
+                return new GenericCommandResult(false,"Oops, looks like anything is incorrect!", command.Notifications);
+            command.Password = PasswordHasher.Hash(command.Password);
+
+             var result = handler.Handle(command);
+             if (!result.Success) return result;
+             var user = (User)result.Data!;
+             result.Data = mapper.Map<User, UserModel>(user);
+             return result;
+
+
         }
     }
 }

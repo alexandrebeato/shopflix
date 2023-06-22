@@ -17,16 +17,16 @@ namespace Domain.Users
 
         private User() { }
 
-        public string Name { get; private set; }
-        public string Email { get; private set; }
-        public string Password { get; private set; }
+        public string Name { get; private set; } = null!;
+        public string Email { get; private set; } = null!;
+        public string Password { get; private set; } = null!;
 
         public static class Factory
         {
             public static User Create(Guid id, string name, string email, string password, DateTime createdAt) =>
                 new(id, name, email, password, createdAt);
 
-            public static User CreateNewUser(Guid id, string name, string email, string password, DateTime createdAt) =>
+            public static User? CreateNewUser(Guid id, string name, string email, string password, DateTime createdAt) =>
                 new()
                 {
                     Id = id,
@@ -36,8 +36,7 @@ namespace Domain.Users
                     CreatedAt = createdAt
                 };
         }
-
-        public string Identity { get; }
+        
         public Guid GetAuthenticatedUserId()
         {
             throw new NotImplementedException();

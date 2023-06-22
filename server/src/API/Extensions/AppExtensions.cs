@@ -2,12 +2,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using API.Configurations;
 using API.Services;
-using Core.Domain.Interfaces;
 using Domain.Handlers;
-using Domain.Repositories;
-using Domain.Users;
 using Infra.CrossCutting.DependencyInjection;
-using Infra.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
@@ -26,7 +22,7 @@ public static class AppExtensions
     }
     public static void ConfigureAuthentication(this WebApplicationBuilder builder)
     {
-        var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtKey"]);
+        var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtKey"]!);
         builder.Services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,7 +62,6 @@ public static class AppExtensions
         var mongoClient = new MongoClient(connectionString);
         builder.Services.AddSingleton<IMongoClient>(mongoClient);
         builder.Services.AddTransient<UserHandler, UserHandler>();
-        BsonSerializer.RegisterSerializer(typeof(Guid), new GuidSerializer(BsonType.String));
         builder.Services.ConfigureAutoMapper();
         builder.Services.RegisterServices(builder.Configuration);
         builder.Services.AddTransient<TokenService>();
