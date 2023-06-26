@@ -5,7 +5,7 @@ namespace Core.Domain.Interfaces
     public interface IUser
     {
         Guid GetAuthenticatedUserId();
-        string GetAuthenticatedUserName();
+        string? GetAuthenticatedUserName();
         bool IsAuthenticated();
         IEnumerable<Claim> GetPermissions();
     }

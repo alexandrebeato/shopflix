@@ -10,8 +10,8 @@ namespace API.Models.Items
         [JsonProperty("userId")]
         public Guid UserId { get; set; }
 
-        [JsonProperty("description")]
-        public string? Description { get; set; }
+        [JsonProperty("description")] 
+        public string Description { get; set; } = null!;
 
         [JsonProperty("quantity")]
         public double Quantity { get; set; }

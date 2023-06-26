@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using API.Models.Users;
 using Domain.Users;
 
 namespace API.Extensions;

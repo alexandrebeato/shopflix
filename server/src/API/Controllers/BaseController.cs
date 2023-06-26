@@ -12,11 +12,9 @@ namespace API.Controllers
 
         protected BaseController(IUser user)
         {
-            if (user.IsAuthenticated())
-            {
-                UserId = user.GetAuthenticatedUserId();
-                UserName = user.GetAuthenticatedUserName();
-            }
+            if (!user.IsAuthenticated()) return;
+            UserId = user.GetAuthenticatedUserId();
+            UserName = user.GetAuthenticatedUserName();
         }
     }
 }

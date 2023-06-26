@@ -1,6 +1,8 @@
+using API.Controllers;
 using API.Models.Users;
 using API.Services;
 using AutoMapper;
+using Core.Domain.Interfaces;
 using Domain.Commands;
 using Domain.Handlers;
 using Domain.Repositories;
@@ -8,15 +10,18 @@ using Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 using SecureIdentity.Password;
 
-namespace API.Controllers
-{
+namespace API.Controllers;
+
+    [ApiController]
     [Route("users")]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
+        public UserController(IUser user) : base(user) {}
+        
         [HttpPost]
         [Route("register")]
         public IActionResult Register(
-            [FromBody] RegisterUserCommand command,
+            [FromBody]RegisterUserCommand command,
             [FromServices]UserHandler handler,
             [FromServices]TokenService tokenService,
             [FromServices]IMapper mapper)
@@ -27,22 +32,13 @@ namespace API.Controllers
                     null,
                     ModelState.Select(x =>
                         new { x.Key, message = x.Value!.Errors[0].ErrorMessage })));
-
-            command.Validate();
-            if (!command.IsValid)
-                return BadRequest(new GenericCommandResult(false,
-                    "Oops, looks like anything is incorrect!",
-                    null,
-                    command.Notifications.Select(x => new {x.Key, x.Message})));
             
-            command.Password = PasswordHasher.Hash(command.Password);
-
             try
             {
                 var result = handler.Handle(command);
-             
-                if (!result.Success) 
-                    return BadRequest(result);
+
+                if (!result.Success)
+                    return StatusCode(403, result);
              
                 var fullUser = (User)result.Data!;
 
@@ -52,14 +48,13 @@ namespace API.Controllers
              
                 result.Data = new {user, token} ;
 
-                return Ok(result);
+                return StatusCode(201, result);
             }
-            catch (Exception e)
+            catch
             {
                 return StatusCode(500, new GenericCommandResult(false, "Internal server error!", null, null));
             }
         }
-        
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(
@@ -78,22 +73,18 @@ namespace API.Controllers
             {
                 var user = await repository.GetByEmail(model.Email);
                 if (user == null || !PasswordHasher.Verify(user.Password, model.Password))
-                    return StatusCode(401,  new GenericCommandResult(false,
+                    return Unauthorized(new GenericCommandResult(false,
                         "Your email or password is incorrect!",
                         null,
                         null));
                 
                 var token = tokenService.GenerateToken(user);
                 
-                return Ok(new GenericCommandResult(true, "Logged In!", new {token},null));
+                return Ok(new GenericCommandResult(true, $"Logged In!", new {token},null));
             }
-            catch (Exception e)
+            catch
             {
                 return StatusCode(500, new GenericCommandResult(false, "Internal server error!", null, null));
             }
-            
-            
         }
-        
     }
-}

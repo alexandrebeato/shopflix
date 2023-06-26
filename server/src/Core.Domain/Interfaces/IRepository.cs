@@ -8,6 +8,5 @@ namespace Core.Domain.Interfaces
         Task Update(T entity);
         Task Delete(Guid id);
         Task<T> GetById(Guid id);
-        Task<List<T>> GetAll();
     }
 }

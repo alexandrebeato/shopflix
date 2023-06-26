@@ -9,7 +9,13 @@ namespace Infra.Data
     {
         public ItemRepository(IConfiguration configuration, IMongoClient mongoClient) : base(configuration, mongoClient) { }
 
-        public Task<List<Item>> GetByUser(Guid userId) =>
-            _mongoCollection.Find(x => x.UserId == userId).ToListAsync();
+        public async Task<List<Item>> GetByUser(Guid userId) =>
+           await _mongoCollection.Find(x => x.UserId == userId).ToListAsync();
+
+        public async Task<Item> GetAndValidateOwner(Guid itemId, Guid userId) =>
+        
+            await _mongoCollection.Find(x => x.UserId == userId && x.Id == itemId).FirstOrDefaultAsync();
+        
+
     }
 }

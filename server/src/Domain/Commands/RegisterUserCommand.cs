@@ -9,21 +9,15 @@ public class RegisterUserCommand :  Notifiable<Notification>, ICommand
 {
     public RegisterUserCommand(string name, string email, string password)
     {
-        Id = Guid.NewGuid();
         Name = name;
         Email = email;
         Password = password;
-        CreatedAt = DateTime.Now;
     }
-    public Guid Id { get; }
-    public DateTime CreatedAt { get; }
     [Required(ErrorMessage="Name is required")]
     public string Name { get; }
     [Required(ErrorMessage="Email is required")]
-
     public string Email { get; } 
     [Required(ErrorMessage="Password is required")]
-
     public string Password {get; set; }
 
     public void Validate()

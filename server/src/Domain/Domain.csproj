@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="FLunt" Version="2.0.5" />
+    <PackageReference Include="SecureIdentity" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

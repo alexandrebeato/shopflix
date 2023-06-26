@@ -4,18 +4,20 @@ using Core.Domain.Interfaces;
 
 namespace Domain.Users
 {
-    public class User : Entity<User>, IUser
+    public class User : Entity<User>
     {
-        public User(Guid id, string name, string email, string password, DateTime createdAt)
+        public User(string name, string email, string password)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             Password = password;
-            CreatedAt = createdAt;
+            CreatedAt = DateTime.Now;
         }
 
-        private User() { }
+        private User()
+        {
+        }
 
         public string Name { get; private set; } = null!;
         public string Email { get; private set; } = null!;
@@ -23,10 +25,11 @@ namespace Domain.Users
 
         public static class Factory
         {
-            public static User Create(Guid id, string name, string email, string password, DateTime createdAt) =>
-                new(id, name, email, password, createdAt);
+            public static User Create(string name, string email, string password) =>
+                new(name, email, password);
 
-            public static User? CreateNewUser(Guid id, string name, string email, string password, DateTime createdAt) =>
+            public static User CreateNewUser(Guid id, string name, string email, string password,
+                DateTime createdAt) =>
                 new()
                 {
                     Id = id,
@@ -36,25 +39,6 @@ namespace Domain.Users
                     CreatedAt = createdAt
                 };
         }
-        
-        public Guid GetAuthenticatedUserId()
-        {
-            throw new NotImplementedException();
-        }
 
-        public string GetAuthenticatedUserName()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsAuthenticated()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Claim> GetPermissions()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
