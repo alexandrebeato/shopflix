@@ -10,9 +10,7 @@ public class MarkItemAsPurchasedCommand : ICommand
         Id = id;
     }
     
-    [Required(ErrorMessage = "Item id is required as a Guid")]
     public Guid Id { get; }
-
     public Guid UserId { get; set; } 
     
     public void Validate()

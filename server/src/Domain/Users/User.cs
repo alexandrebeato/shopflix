@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using Core.Domain.Entities;
 using Core.Domain.Interfaces;
 
@@ -21,6 +22,7 @@ namespace Domain.Users
 
         public string Name { get; private set; } = null!;
         public string Email { get; private set; } = null!;
+        [JsonIgnore]
         public string Password { get; private set; } = null!;
 
         public static class Factory

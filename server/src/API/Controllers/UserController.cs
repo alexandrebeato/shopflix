@@ -40,12 +40,10 @@ namespace API.Controllers;
                 if (!result.Success)
                     return StatusCode(403, result);
              
-                var fullUser = (User)result.Data!;
+                var user = (User)result.Data!;
 
-                var token = tokenService.GenerateToken(fullUser);
-
-                var user = mapper.Map<User, UserModel>(fullUser);
-             
+                var token = tokenService.GenerateToken(user);
+                
                 result.Data = new {user, token} ;
 
                 return StatusCode(201, result);

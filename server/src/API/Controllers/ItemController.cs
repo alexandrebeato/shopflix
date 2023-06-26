@@ -66,22 +66,22 @@ namespace API.Controllers;
     [HttpPost]
     [Route("purchase")]
     [Authorize]
-    public IActionResult GetAllByUser(
+    public IActionResult MarkAsPurchase(
         [FromBody]MarkItemAsPurchasedCommand command,
         [FromServices]ItemHandler handler)
     {
-        command.UserId = (Guid)UserId!;
         if (!ModelState.IsValid)
             return BadRequest(new GenericCommandResult(false,
                 "Oops, looks like that lack anything!",
                 null,
                 ModelState.Select(x =>
                     new { x.Key, message = x.Value!.Errors[0].ErrorMessage })));
+        command.UserId = (Guid)UserId!;
         try
         {
             var result = handler.Handle(command);
 
-            return StatusCode(result.Success == false ? 403 : 202, result);
+            return StatusCode(result.Success == false ? 404 : 202, result);
         }
         catch
         {
@@ -92,7 +92,7 @@ namespace API.Controllers;
     [HttpGet]
     [Route("{id:guid}")]
     [Authorize]
-    public IActionResult GetAllByUser(
+    public IActionResult Delete(
         [FromRoute]Guid id,
         [FromServices]ItemHandler handler)
     {
@@ -106,7 +106,7 @@ namespace API.Controllers;
         }
         catch
         {
-            return StatusCode(500, new GenericCommandResult(false, "Internal server error!", null, null));
+            return StatusCode(500, new GenericCommandResult(false, $"Internal server error!", null, null));
         }
     }
 }
