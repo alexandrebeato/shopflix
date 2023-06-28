@@ -69,6 +69,7 @@ public static class AppExtensions
             policeBuilder.AddDefaultPolicy(policy => policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod()));
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddSingleton<IUser, AspNetUser>();
+        builder.Services.AddSwaggerGen();
 
     }
 }
