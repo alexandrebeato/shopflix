@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import Header from '../components/Header';
+import Header from '../../components/Header';
 import '../input.css';
 
 interface ITestList {

@@ -4,6 +4,7 @@ import shopflixLogo from '../../assets/images/shopflix.png';
 import shopflixBackground from '../../assets/images/shopflix-bg.png';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 export default function Login(): JSX.Element {
   const router = useRouter();
@@ -33,9 +34,7 @@ export default function Login(): JSX.Element {
         </div>
 
         <div className="flex items-center w-full max-w-md px-6 mx-auto relative lg:w-2/6">
-          <p className="absolute top-2 right-2 left-1/2 -translate-x-1/2 text-center">
-            Dark Theme
-          </p>
+          <ThemeSwitcher className="absolute top-2 left-1/2 transform -translate-x-1/2 cursor-pointer" />
           <div className="flex-1 ">
             <div className="flex text-center flex-col items-center justify-center">
               <Image

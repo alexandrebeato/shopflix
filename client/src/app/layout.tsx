@@ -1,5 +1,6 @@
 import { Sora } from 'next/font/google';
 import './input.css';
+import { Providers } from '@/providers';
 
 const inter = Sora({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -16,7 +17,9 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
