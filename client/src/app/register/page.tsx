@@ -1,12 +1,80 @@
 'use client';
+import { useEffect } from 'react';
 import Image from 'next/image';
-import shopflixLogo from '../../assets/images/shopflix.png';
 import { useRouter } from 'next/navigation';
-import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { FiArrowLeft } from 'react-icons/fi';
+import { z } from 'zod';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+import shopflixLogo from '../../assets/images/shopflix.png';
+
+const validationSchema = z
+  .object({
+    name: z.string().nonempty('Nome é obrigatório.'),
+    email: z
+      .string()
+      .nonempty('Email é obrigatório.')
+      .email({ message: 'Informe um e-mail válido.' }),
+    password: z
+      .string()
+      .min(8, { message: 'Senha precisa ter no mínimo 8 caracteres.' })
+      .nonempty('Senha é obrigatório.'),
+    repeatPassword: z
+      .string()
+      .min(8, {
+        message: 'Repetição de senha precisa ter no mínimo 8 caracteres.'
+      })
+      .nonempty('Repetição de senha é obrigatório.')
+  })
+  .refine((data) => data.password === data.repeatPassword, {
+    message: 'As senhas não correspondem.',
+    path: ['repeatPassword']
+  });
+
+type FormProps = z.infer<typeof validationSchema>;
 
 export default function Register(): JSX.Element {
   const router = useRouter();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError
+  } = useForm<FormProps>({
+    mode: 'all',
+    criteriaMode: 'all',
+    resolver: zodResolver(validationSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      repeatPassword: ''
+    }
+  });
+
+  const handleFormSubmit: SubmitHandler<FormProps> = (data: FormProps): any => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    setError('name', {
+      message: undefined
+    });
+    setError('email', {
+      message: undefined
+    });
+    setError('password', {
+      message: undefined
+    });
+    setError('repeatPassword', {
+      message: undefined
+    });
+  }, []);
+
+  console.log(errors);
 
   return (
     <div className="flex justify-center items-center h-screen bg-slate-100 dark:bg-gradient-to-r from-black to-slate-900 relative select-none">
@@ -33,11 +101,7 @@ export default function Register(): JSX.Element {
         </div>
 
         <div className="mt-8">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
             <div className="mt-6">
               <div className="flex justify-between mb-2">
                 <label
@@ -49,15 +113,24 @@ export default function Register(): JSX.Element {
               </div>
 
               <input
+                {...register('name')}
                 type="text"
                 name="name"
-                id="name"
                 placeholder="Seu nome"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                className={`${
+                  errors.name?.message !== undefined
+                    ? 'border border-red-500'
+                    : ''
+                }  focus:outline-none relative block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700focus:outline-none`}
               />
+              {errors.name?.message !== undefined && (
+                <p className="absolute text-red-500 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <label
                 htmlFor="email"
                 className="block mb-2 text-sm text-gray-600 dark:text-gray-200"
@@ -65,15 +138,23 @@ export default function Register(): JSX.Element {
                 Email
               </label>
               <input
+                {...register('email')}
                 type="email"
-                name="email"
-                id="email"
                 placeholder="exemplo@exemplo.com"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                className={`${
+                  errors.email?.message !== undefined
+                    ? 'border border-red-500'
+                    : ''
+                }  focus:outline-none relative block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700focus:outline-none`}
               />
+              {errors.email?.message !== undefined && (
+                <p className="absolute text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <div className="flex justify-between mb-2">
                 <label
                   htmlFor="password"
@@ -84,15 +165,23 @@ export default function Register(): JSX.Element {
               </div>
 
               <input
+                {...register('password')}
                 type="password"
-                name="password"
-                id="password"
                 placeholder="Sua senha"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                className={`${
+                  errors.password?.message !== undefined
+                    ? 'border border-red-500'
+                    : ''
+                }  focus:outline-none relative block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700focus:outline-none`}
               />
+              {errors.password?.message !== undefined && (
+                <p className="absolute text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <div className="flex justify-between mb-2">
                 <label
                   htmlFor="passwordRepeat"
@@ -101,22 +190,28 @@ export default function Register(): JSX.Element {
                   Repetição de senha
                 </label>
               </div>
-
               <input
+                {...register('repeatPassword')}
                 type="password"
-                name="passwordRepeat"
-                id="passwordRepeat"
                 placeholder="Repita sua senha"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                className={`${
+                  errors.repeatPassword?.message !== undefined
+                    ? 'border border-red-500'
+                    : ''
+                }  focus:outline-none relative block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700focus:outline-none`}
               />
+              {errors.repeatPassword?.message !== undefined && (
+                <p className="absolute text-red-500 text-sm mt-1">
+                  {errors.repeatPassword.message}
+                </p>
+              )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8 sm:mt-14">
               <button
-                onClick={() => {
-                  router.push('login');
-                }}
-                className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                type="submit"
+                disabled={Object.entries(errors).length > 0}
+                className="w-full cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
               >
                 Registrar-se
               </button>

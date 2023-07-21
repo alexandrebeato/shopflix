@@ -1,12 +1,52 @@
 'use client';
+import { useEffect } from 'react';
 import Image from 'next/image';
-import shopflixLogo from '../../assets/images/shopflix.png';
 import { useRouter } from 'next/navigation';
-import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { FiArrowLeft } from 'react-icons/fi';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+
+import shopflixLogo from '../../assets/images/shopflix.png';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+
+const validationSchema = z.object({
+  email: z
+    .string()
+    .nonempty('Email é obrigatório.')
+    .email({ message: 'Informe um e-mail válido.' })
+});
+
+type FormProps = z.infer<typeof validationSchema>;
 
 export default function ForgotPassword(): JSX.Element {
   const router = useRouter();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError
+  } = useForm<FormProps>({
+    mode: 'all',
+    criteriaMode: 'all',
+    resolver: zodResolver(validationSchema),
+    defaultValues: {
+      email: ''
+    }
+  });
+
+  const handleFormSubmit: SubmitHandler<FormProps> = (data: FormProps): any => {
+    console.log(data);
+  };
+
+  console.log(errors);
+
+  useEffect(() => {
+    setError('email', {
+      message: undefined
+    });
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-screen bg-slate-100 dark:bg-gradient-to-r from-black to-slate-900 relative select-none">
@@ -34,11 +74,7 @@ export default function ForgotPassword(): JSX.Element {
         </div>
 
         <div className="mt-8">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
             <div className="mt-6">
               <label
                 htmlFor="email"
@@ -47,20 +83,27 @@ export default function ForgotPassword(): JSX.Element {
                 Email
               </label>
               <input
+                {...register('email')}
                 type="email"
-                name="email"
-                id="email"
                 placeholder="exemplo@exemplo.com"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                className={`${
+                  errors.email?.message !== undefined
+                    ? 'border border-red-500'
+                    : ''
+                }  focus:outline-none relative block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700focus:outline-none`}
               />
+              {errors.email?.message !== undefined && (
+                <p className="absolute text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <button
-                onClick={() => {
-                  router.push('login');
-                }}
-                className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                type="submit"
+                disabled={Object.entries(errors).length > 0}
+                className="w-full cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
               >
                 Enviar
               </button>
