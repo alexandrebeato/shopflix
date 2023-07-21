@@ -4,7 +4,7 @@ import axios, {
   type AxiosRequestConfig
 } from 'axios';
 
-interface AxiosFunctions {
+interface AxiosFunctionsProps {
   get: <T>(
     url: string,
     config?: AxiosRequestConfig
@@ -30,7 +30,7 @@ const axiosiInstance = axios.create({
   baseURL: 'http://localhost:5011'
 });
 
-const api = (axios: AxiosInstance): AxiosFunctions => {
+const api = (axios: AxiosInstance): AxiosFunctionsProps => {
   return {
     get: async function <T>(url: string, config: AxiosRequestConfig = {}) {
       return await axios.get<T>(url, config);

@@ -2,14 +2,24 @@
 import Image from 'next/image';
 import shopflixLogo from '../../assets/images/shopflix.png';
 import { useRouter } from 'next/navigation';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+import { FiArrowLeft } from 'react-icons/fi';
 
 export default function ForgotPassword(): JSX.Element {
   const router = useRouter();
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-black to-slate-900">
-      <div className="flex-1 max-w-lg mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex justify-center items-center h-screen bg-slate-100 dark:bg-gradient-to-r from-black to-slate-900 relative select-none">
+      <ThemeSwitcher className="absolute top-2 left-1/2 transform -translate-x-1/2 cursor-pointer" />
+      <div className="flex-1 max-w-lg mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex text-center flex-col items-center justify-center">
+          <FiArrowLeft
+            size={25}
+            className="absolute top-0 left-3 cursor-pointer"
+            onClick={() => {
+              router.push('login');
+            }}
+          />
           <Image
             src={shopflixLogo}
             width={200}

@@ -1,26 +1,59 @@
+import { type Dispatch, type SetStateAction } from 'react';
 import Image from 'next/image';
+import { FiLogOut } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 import shopflixLogo from '../../assets/images/shopflix.png';
 import ThemeSwitcher from '../ThemeSwitcher';
+import { type ShoplistProps } from '@/app/shoplist/page';
 
-export default function Header(): JSX.Element {
+interface HeaderProps {
+  setShoplist: Dispatch<SetStateAction<ShoplistProps[]>>;
+}
+
+export default function Header({ setShoplist }: HeaderProps): JSX.Element {
+  const router = useRouter();
+
+  function handleClearList(): void {
+    setShoplist([
+      {
+        text: '',
+        checked: false
+      }
+    ]);
+  }
+
   return (
-    <header className="flex items-center h-20 justify-between flex-wrap bg-teal-500 p-6 sm:flex-col sm:h-fit">
-      <Image src={shopflixLogo} width={130} height={100} alt="Shopflix Logo" />
-      <div className="text-xl flex items-center  sm:flex-col sm:mt-5 lg:flex-row">
-        <a className="block sm:mt-4 lg:inline-block mt-0 text-teal-200 hover:text-white mr-12 sm:mr-0 hover:cursor-pointer">
+    <header className="flex items-center h-20 p-6 justify-between flex-wrap bg-[#DCDDE0] dark:bg-[#111726] sm:flex-col sm:h-fit">
+      <Image
+        src={shopflixLogo}
+        width={130}
+        height={100}
+        alt="Shopflix Logo"
+        className="select-none"
+      />
+      <nav className="text-xl text-[#575450] flex items-center select-none cursor-pointer dark:text-white sm:flex-col sm:mt-5 lg:flex-row">
+        <a className="block mt-0 mr-12 sm:mr-0 sm:mt-4 lg:inline-block">
           <ThemeSwitcher />
         </a>
-        {/* <a
-          href="#responsive-header"
-          className="block sm:mt-4 lg:inline-block mt-0 text-teal-200 hover:text-white mr-12 sm:mr-0"
+        <a
+          className="block lg:inline-block mt-0  sm:mr-0 sm:mt-4 hover:text-white dark:hover:text-[#3F4347] hover:transition hover:ease-in-out hover: duration-500"
+          onClick={handleClearList}
         >
-          TODO: Recycled Paper
-        </a> */}
-        <a className="block sm:mt-4 lg:inline-block mt-0 text-teal-200 hover:text-white sm:mr-0 select-non">
           Limpar lista
         </a>
-      </div>
+        <a
+          className="block lg:inline-block mt-0 ml-12 sm:mr-0 sm:mt-4 sm:ml-0 hover:text-white dark:hover:text-[#3F4347] hover:transition hover:ease-in-out hover: duration-500"
+          onClick={handleClearList}
+        >
+          <FiLogOut
+            size={25}
+            onClick={() => {
+              router.push('login');
+            }}
+          />
+        </a>
+      </nav>
     </header>
   );
 }

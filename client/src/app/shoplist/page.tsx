@@ -1,19 +1,23 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { Comic_Neue } from 'next/font/google';
+
 import Header from '../../components/Header';
 import '../input.css';
 
-interface ITestList {
+export interface ShoplistProps {
   text: string;
   checked: boolean;
 }
 
+const comicNeue = Comic_Neue({ subsets: ['latin'], weight: '400' });
+
 export default function ShopList(): JSX.Element {
-  const [testList, setTestList] = useState<ITestList[]>([]);
+  const [shoplist, setShoplist] = useState<ShoplistProps[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setTestList([
+    setShoplist([
       {
         text: '',
         checked: false
@@ -22,8 +26,8 @@ export default function ShopList(): JSX.Element {
   }, []);
 
   function handleCheckedChange(idx: number): void {
-    setTestList((prevTestList) =>
-      prevTestList.map((item, index) =>
+    setShoplist((prevShoplist) =>
+      prevShoplist.map((item, index) =>
         index === idx ? { ...item, checked: !item.checked } : item
       )
     );
@@ -36,38 +40,40 @@ export default function ShopList(): JSX.Element {
     if (event.key === 'Enter') {
       const inputValue = inputRef.current?.value ?? '';
       if (inputValue.trim() !== '') {
-        setTestList((prevTestList) =>
-          prevTestList.map((item, index) =>
+        setShoplist((prevShoplist) =>
+          prevShoplist.map((item, index) =>
             index === idx ? { checked: false, text: inputValue } : item
           )
         );
 
-        setTestList((prevTestList) => [
-          ...prevTestList,
+        setShoplist((prevShoplist) => [
+          ...prevShoplist,
           { checked: false, text: '' }
         ]);
 
+        // Clear the input value after adding the new item
         if (inputRef.current !== null) {
           inputRef.current.value = '';
         }
-        // Clear the input value after adding the new item
       }
     }
   }
 
   return (
-    <div className="h-screen leading-[30px]">
-      <Header />
+    <div className="h-screen leading-[30px] sm:overflow-y-hidden">
+      <Header setShoplist={setShoplist} />
       <main
-        className="h-full sm:h-48 flex items-center justify-center"
+        className="h-full flex items-center justify-center bg-[#DCDDE0] dark:bg-[#111726] sm:h-48 sm:block sm:pt-14"
         style={{
           height: 'calc(100vh - 80px)'
         }}
       >
-        <div className="relative flex w-[90%] max-w-[800px] h-[400px] bg-neutral-50 shadow-[0_2px_8px_rgba(0,0,0,0.3)] overflow-hidden mx-auto my-0 rounded-[10px] before:content-[''] before:absolute before:w-[60px] before:bg-gradient-radial before:bg-repeat-y before:bg-[length:30px_30px] before:box-border before:border-r-[3px] before:border-r-[#D44147] before:border-solid before:left-0 before:inset-y-0">
-          <div className="absolute bg-gradient-linear-lines bg-[length:30px_30px] left-[60px] right-0 inset-y-[20px] overflow-y-scroll">
+        <div
+          className={`relative flex w-[90%] max-w-[800px] h-[550px] bg-neutral-50 shadow-[0_2px_8px_rgba(0,0,0,0.3) overflow-hidden mx-auto my-0 rounded-[10px] before:content-[''] before:absolute before:w-[60px] before:bg-gradient-radial before:bg-repeat-y before:bg-[length:30px_30px] before:box-border before:border-r-[3px] before:border-r-[#D44147] before:border-solid before:left-0 before:inset-y-0 ${comicNeue.className}`}
+        >
+          <div className="absolute bg-gradient-linear-lines bg-[length:30px_30px] left-[60px] right-0 inset-y-[20px] overflow-y-auto">
             <ul className="text-[#555] text-[22px]">
-              {testList.map((item: ITestList, idx: number) => {
+              {shoplist.map((item: ShoplistProps, idx: number) => {
                 return (
                   <div key={idx} className="flex ml-2 items-start">
                     <li
@@ -83,6 +89,7 @@ export default function ShopList(): JSX.Element {
                           className="inline select-none border-none outline-none bg-transparent w-full"
                           onKeyDown={(e) => {
                             handleAddItem(idx, e);
+                            inputRef.current?.focus();
                           }}
                         />
                       )}
