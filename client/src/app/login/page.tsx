@@ -1,20 +1,72 @@
 'use client';
+import { useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { useTheme } from 'next-themes';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import shopflixLogo from '../../assets/images/shopflix.png';
 import shopflixBackground from '../../assets/images/shopflix-bg.png';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import shopflixWhiteBackground from '../../assets/images/shopflix-bg-white.png';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+
+const validationSchema = z.object({
+  email: z
+    .string()
+    .nonempty('Email é obrigatório.')
+    .email({ message: 'Informe um e-mail válido.' }),
+  password: z
+    .string()
+    .min(8, { message: 'Senha precisa ter no mínimo 8 caracteres.' })
+    .nonempty('Senha é obrigatório.')
+});
+
+type FormProps = z.infer<typeof validationSchema>;
 
 export default function Login(): JSX.Element {
-  const router = useRouter();
+  const { theme } = useTheme();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError
+  } = useForm<FormProps>({
+    mode: 'all',
+    criteriaMode: 'all',
+    resolver: zodResolver(validationSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
+
+  const handleFormSubmit: SubmitHandler<FormProps> = (data: FormProps): any => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    setError('email', {
+      message: undefined
+    });
+    setError('password', {
+      message: undefined
+    });
+  }, []);
 
   return (
-    <div className="bg-white dark:bg-gray-900">
+    <div className="bg-slate-100 dark:bg-[#111726] select-none">
       <div className="flex justify-center h-screen">
         <div
           className="hidden bg-cover lg:block lg:w-2/3"
           style={{
-            backgroundImage: `url(${shopflixBackground.src})`,
+            backgroundImage: `${
+              theme === 'light'
+                ? `url(${shopflixWhiteBackground.src})`
+                : `url(${shopflixBackground.src})`
+            }`,
             backgroundPosition: 'center'
           }}
         >
@@ -33,9 +85,7 @@ export default function Login(): JSX.Element {
         </div>
 
         <div className="flex items-center w-full max-w-md px-6 mx-auto relative lg:w-2/6">
-          <p className="absolute top-2 right-2 left-1/2 -translate-x-1/2 text-center">
-            Dark Theme
-          </p>
+          <ThemeSwitcher className="absolute top-2 left-1/2 transform -translate-x-1/2 cursor-pointer" />
           <div className="flex-1 ">
             <div className="flex text-center flex-col items-center justify-center">
               <Image
@@ -51,11 +101,7 @@ export default function Login(): JSX.Element {
             </div>
 
             <div className="mt-8">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}
-              >
+              <form onSubmit={handleSubmit(handleFormSubmit)}>
                 <div>
                   <label
                     htmlFor="email"
@@ -64,15 +110,23 @@ export default function Login(): JSX.Element {
                     Email
                   </label>
                   <input
+                    {...register('email')}
                     type="email"
-                    name="email"
-                    id="email"
                     placeholder="exemplo@exemplo.com"
-                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                    className={`${
+                      errors.email?.message !== undefined
+                        ? 'border border-red-500'
+                        : ''
+                    }  focus:outline-none relative block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700focus:outline-none`}
                   />
+                  {errors.email?.message !== undefined && (
+                    <p className="absolute text-red-500 text-sm mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-8">
                   <div className="flex justify-between mb-2">
                     <label
                       htmlFor="password"
@@ -89,20 +143,27 @@ export default function Login(): JSX.Element {
                   </div>
 
                   <input
+                    {...register('password')}
                     type="password"
-                    name="password"
-                    id="password"
                     placeholder="Sua senha"
-                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                    className={`${
+                      errors.password?.message !== undefined
+                        ? 'border border-red-500'
+                        : ''
+                    } block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:outline-none`}
                   />
+                  {errors.password?.message !== undefined && (
+                    <p className="absolute text-red-500 text-sm mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-10 sm:mt-11">
                   <button
-                    onClick={() => {
-                      router.push('shoplist');
-                    }}
-                    className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                    type="submit"
+                    disabled={Object.entries(errors).length > 0}
+                    className="w-full cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
                   >
                     Entrar
                   </button>
