@@ -11,7 +11,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   const serialized = serialize(COOKIE_NAME, token, {
     httpOnly: true,
-    // sameSite: 'strict',
+    sameSite: 'strict',
     maxAge: MAX_AGE,
     path: '/'
   });
