@@ -7,6 +7,7 @@ using Domain.Commands;
 using Domain.Handlers;
 using Domain.Repositories;
 using Domain.Users;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SecureIdentity.Password;
 
@@ -47,6 +48,7 @@ namespace API.Controllers;
                 result.Data = new {user, token} ;
 
                 return StatusCode(201, result);
+
             }
             catch
             {

@@ -40,10 +40,7 @@ public static class AppExtensions
     }
     public static void ConfigureMvc(this WebApplicationBuilder builder)
     {
-        builder
-        .Services
-        .AddControllers()
-        .ConfigureApiBehaviorOptions(options =>
+        builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
         {
             options.SuppressModelStateInvalidFilter = true;
         })
