@@ -2,15 +2,18 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTheme } from 'next-themes';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type AxiosError } from 'axios';
 
-import shopflixLogo from '../../assets/images/shopflix.png';
-import shopflixBackground from '../../assets/images/shopflix-bg.png';
-import shopflixWhiteBackground from '../../assets/images/shopflix-bg-white.png';
+import shopflixLogo from '../assets/images/shopflix.png';
+import shopflixBackground from '../assets/images/shopflix-bg.png';
+import shopflixWhiteBackground from '../assets/images/shopflix-bg-white.png';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
+import api from '@/services/api';
 
 const validationSchema = z.object({
   email: z
@@ -25,8 +28,20 @@ const validationSchema = z.object({
 
 type FormProps = z.infer<typeof validationSchema>;
 
+interface LoginProps {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  data: {
+    token: string;
+  };
+}
+
 export default function Login(): JSX.Element {
   const { theme } = useTheme();
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -43,8 +58,32 @@ export default function Login(): JSX.Element {
     }
   });
 
-  const handleFormSubmit: SubmitHandler<FormProps> = (data: FormProps): any => {
-    console.log(data);
+  const handleFormSubmit: SubmitHandler<FormProps> = async (
+    data: FormProps
+  ): Promise<any> => {
+    try {
+      const payload = {
+        email: data.email,
+        password: data.password
+      };
+
+      const res = await api.post<LoginProps, LoginResponse>(
+        payload,
+        '/users/login'
+      );
+
+      await api.post(
+        { token: res.data.data.token },
+        '/api/cookies',
+        {},
+        'http://localhost:3000'
+      );
+
+      router.push('/shoplist');
+    } catch (e) {
+      const error = e as AxiosError;
+      console.log(error);
+    }
   };
 
   useEffect(() => {

@@ -49,7 +49,7 @@ export default function Header({ setShoplist }: HeaderProps): JSX.Element {
           <FiLogOut
             size={25}
             onClick={() => {
-              router.push('login');
+              router.push('/');
             }}
           />
         </a>

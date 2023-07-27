@@ -74,8 +74,6 @@ export default function Register(): JSX.Element {
     });
   }, []);
 
-  console.log(errors);
-
   return (
     <div className="flex justify-center items-center h-screen bg-slate-100 dark:bg-gradient-to-r from-black to-slate-900 relative select-none">
       <ThemeSwitcher className="absolute top-2 left-1/2 transform -translate-x-1/2 cursor-pointer" />
@@ -84,7 +82,7 @@ export default function Register(): JSX.Element {
           size={25}
           className="absolute top-0 left-3 cursor-pointer"
           onClick={() => {
-            router.push('login');
+            router.push('/');
           }}
         />
         <div className="flex text-center flex-col items-center justify-center">

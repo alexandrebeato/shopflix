@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, type ReactNode, useEffect } from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'next-themes';
-import { queryClient } from '@/services';
 
-interface ProvidersProps {
-  children: ReactNode;
-}
-
-export const Providers = ({ children }: ProvidersProps): JSX.Element | null => {
+export const Providers = ({
+  children
+}: {
+  children: React.ReactNode;
+}): JSX.Element | null => {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -20,9 +18,5 @@ export const Providers = ({ children }: ProvidersProps): JSX.Element | null => {
     return <>{children}</>;
   }
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class">{children}</ThemeProvider>
-    </QueryClientProvider>
-  );
+  return <ThemeProvider attribute="class">{children}</ThemeProvider>;
 };

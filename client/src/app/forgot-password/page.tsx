@@ -40,8 +40,6 @@ export default function ForgotPassword(): JSX.Element {
     console.log(data);
   };
 
-  console.log(errors);
-
   useEffect(() => {
     setError('email', {
       message: undefined
@@ -57,7 +55,7 @@ export default function ForgotPassword(): JSX.Element {
             size={25}
             className="absolute top-0 left-3 cursor-pointer"
             onClick={() => {
-              router.push('login');
+              router.push('/');
             }}
           />
           <Image
