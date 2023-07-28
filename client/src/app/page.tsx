@@ -14,6 +14,7 @@ import shopflixBackground from '../assets/images/shopflix-bg.png';
 import shopflixWhiteBackground from '../assets/images/shopflix-bg-white.png';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import api from '@/services/api';
+import Spinner from '@/components/Spinner';
 
 const validationSchema = z.object({
   email: z
@@ -208,10 +209,10 @@ export default function Login(): JSX.Element {
                 <div className="mt-10 sm:mt-11">
                   <button
                     type="submit"
-                    disabled={Object.entries(errors).length > 0}
-                    className="w-full cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
+                    disabled={Object.entries(errors).length > 0 || loading}
+                    className="w-full h-10 flex items-center justify-center cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
                   >
-                    Entrar
+                    {loading ? <Spinner /> : 'Entrar'}
                   </button>
                 </div>
               </form>
