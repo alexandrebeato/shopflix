@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -43,6 +43,8 @@ export default function Login(): JSX.Element {
   const { theme } = useTheme();
   const router = useRouter();
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const {
     handleSubmit,
     register,
@@ -67,6 +69,8 @@ export default function Login(): JSX.Element {
         password: data.password
       };
 
+      setLoading(true);
+
       const res = await api.post<LoginProps, LoginResponse>(
         payload,
         '/users/login'
@@ -79,8 +83,11 @@ export default function Login(): JSX.Element {
         'http://localhost:3000'
       );
 
+      setLoading(false);
+
       router.push('/shoplist');
     } catch (e) {
+      setLoading(false);
       const error = e as AxiosError;
       console.log(error);
     }

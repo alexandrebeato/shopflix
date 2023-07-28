@@ -23,6 +23,17 @@ export default function Header({ setShoplist }: HeaderProps): JSX.Element {
     ]);
   }
 
+  async function handleLogout(): Promise<void> {
+    try {
+      await fetch('http://localhost:3000/api/cookies', {
+        method: 'DELETE'
+      });
+      router.push('/');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <header className="flex items-center h-20 p-6 justify-between flex-wrap bg-[#DCDDE0] dark:bg-[#111726] sm:flex-col sm:h-fit">
       <Image
@@ -46,12 +57,7 @@ export default function Header({ setShoplist }: HeaderProps): JSX.Element {
           className="block lg:inline-block mt-0 ml-12 sm:mr-0 sm:mt-4 sm:ml-0 hover:text-white dark:hover:text-[#3F4347] hover:transition hover:ease-in-out hover: duration-500"
           onClick={handleClearList}
         >
-          <FiLogOut
-            size={25}
-            onClick={() => {
-              router.push('/');
-            }}
-          />
+          <FiLogOut size={25} onClick={handleLogout} />
         </a>
       </nav>
     </header>

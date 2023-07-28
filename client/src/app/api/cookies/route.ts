@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { serialize } from 'cookie';
 
 import { COOKIE_NAME, MAX_AGE } from '@/constants/cookies';
@@ -23,17 +22,14 @@ export async function POST(request: NextRequest): Promise<Response> {
 }
 
 export async function DELETE(request: Request): Promise<Response> {
-  const cookiesStore = cookies();
+  const response = new NextResponse('Token deleted.');
 
-  const token = cookiesStore.delete(COOKIE_NAME);
-
-  if (token === undefined) {
-    return new Response('Something went wrong.', {
-      status: 401
-    });
-  }
-
-  return new Response('Cookie deleted.', {
-    status: 204
+  response.cookies.set({
+    name: COOKIE_NAME,
+    value: '',
+    maxAge: 0,
+    path: '/'
   });
+
+  return response;
 }

@@ -26,12 +26,18 @@ export default async function middleware(request: NextRequest) {
   const now = Math.floor(Date.now() / 1000);
 
   if (decodedToken.exp && decodedToken.exp < now) {
+    const response = NextResponse.redirect(signInUrl);
+
     // implementar algum toast sepa.
     if (request.nextUrl.pathname === '/') {
-      return NextResponse.next();
+      response.cookies.set({
+        name: COOKIE_NAME,
+        value: '',
+        maxAge: 0,
+        path: '/'
+      });
+      return response;
     }
-
-    const response = NextResponse.redirect(signInUrl);
 
     response.cookies.set({
       name: COOKIE_NAME,
@@ -42,8 +48,6 @@ export default async function middleware(request: NextRequest) {
 
     return response;
   }
-
-  console.log(decodedToken);
 
   if (request.nextUrl.pathname === '/') {
     return NextResponse.redirect(shoplistUrl);
