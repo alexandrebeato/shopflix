@@ -20,7 +20,7 @@ interface PurchaseItemProps {
   userId: string;
 }
 
-interface ItemProps {
+export interface ItemProps {
   userId?: string;
   description: string;
   isPurchased: boolean;
@@ -45,6 +45,8 @@ const comicNeue = Comic_Neue({ subsets: ['latin'], weight: '400' });
 export default function ShopList(): JSX.Element {
   const [shoplist, setShoplist] = useState<ItemProps[]>([]);
   const [userId, setUserId] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -146,6 +148,10 @@ export default function ShopList(): JSX.Element {
     idx: number
   ): Promise<void> {
     try {
+      if (item.isPurchased) {
+        return;
+      }
+
       const payload = {
         id: item.id as string,
         userId
@@ -175,7 +181,11 @@ export default function ShopList(): JSX.Element {
 
   return (
     <div className="h-screen leading-[30px] sm:overflow-y-hidden">
-      <Header setShoplist={setShoplist} />
+      <Header
+        userId={userId}
+        setShoplist={setShoplist}
+        setLoading={setLoading}
+      />
       <main
         className="h-full flex items-center justify-center bg-[#DCDDE0] dark:bg-[#111726] sm:h-48 sm:block sm:pt-14"
         style={{

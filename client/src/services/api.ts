@@ -23,8 +23,9 @@ interface AxiosFunctionsProps {
     url?: string
   ) => Promise<AxiosResponse<U>>;
   delete: <T>(
-    // url: string,
-    config?: AxiosRequestConfig
+    endpoint: string,
+    config?: AxiosRequestConfig,
+    url?: string
   ) => Promise<AxiosResponse<T>>;
 }
 
@@ -63,8 +64,19 @@ const api = (axios: AxiosInstance): AxiosFunctionsProps => {
         config
       );
     },
-    delete: async function <T>(config: AxiosRequestConfig = {}) {
-      return await axios.delete<T>('http://localhost:5011', config);
+    delete: async function <T>(
+      endpoint: string,
+      config: AxiosRequestConfig = {},
+      url?: string
+    ) {
+      return await axios.delete<T>(
+        `${
+          url !== undefined
+            ? `${url}${endpoint}`
+            : `http://localhost:5011${endpoint}`
+        }`,
+        config
+      );
     }
   };
 };

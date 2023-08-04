@@ -2,34 +2,51 @@ import { type Dispatch, type SetStateAction } from 'react';
 import Image from 'next/image';
 import { FiLogOut } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 import ThemeSwitcher from '../ThemeSwitcher';
-import { type ShoplistProps } from '@/app/shoplist/page';
+import api from '@/services/api';
+import { type ItemProps } from '@/app/shoplist/page';
 
 interface HeaderProps {
-  setShoplist: Dispatch<SetStateAction<ShoplistProps[]>>;
+  userId: string;
+  setShoplist: Dispatch<SetStateAction<ItemProps[]>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function Header({ setShoplist }: HeaderProps): JSX.Element {
+export default function Header({
+  userId,
+  setShoplist,
+  setLoading
+}: HeaderProps): JSX.Element {
   const router = useRouter();
 
-  function handleClearList(): void {
-    setShoplist([
-      {
-        text: '',
-        checked: false
-      }
-    ]);
+  async function handleClearList(): Promise<void> {
+    try {
+      setLoading(true);
+
+      await api.delete(`/items/list/${userId}`);
+
+      setShoplist([
+        {
+          description: '',
+          isPurchased: false
+        }
+      ]);
+
+      setLoading(false);
+      toast.success('Lista limpa com sucesso!');
+    } catch (e) {
+      toast.error('Erro ao limpar a lista, tente novamente.');
+    }
   }
 
   async function handleLogout(): Promise<void> {
     try {
-      await fetch('http://localhost:3000/api/cookies', {
-        method: 'DELETE'
-      });
+      await api.delete('/api/cookies', {}, 'http://localhost:3000');
       router.push('/');
     } catch (e) {
-      console.log(e);
+      router.push('/');
     }
   }
 
@@ -52,10 +69,7 @@ export default function Header({ setShoplist }: HeaderProps): JSX.Element {
         >
           Limpar lista
         </a>
-        <a
-          className="block lg:inline-block mt-0 ml-12 sm:mr-0 sm:mt-4 sm:ml-0 hover:text-white dark:hover:text-[#3F4347] hover:transition hover:ease-in-out hover: duration-500"
-          onClick={handleClearList}
-        >
+        <a className="block lg:inline-block mt-0 ml-12 sm:mr-0 sm:mt-4 sm:ml-0 hover:text-white dark:hover:text-[#3F4347] hover:transition hover:ease-in-out hover: duration-500">
           <FiLogOut size={25} onClick={handleLogout} />
         </a>
       </nav>

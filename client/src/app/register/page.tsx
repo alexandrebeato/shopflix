@@ -60,6 +60,7 @@ type FormProps = z.infer<typeof validationSchema>;
 
 export default function Register(): JSX.Element {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -77,8 +78,6 @@ export default function Register(): JSX.Element {
       repeatPassword: ''
     }
   });
-
-  const [loading, setLoading] = useState<boolean>(false);
 
   const handleFormSubmit: SubmitHandler<FormProps> = async (
     data: FormProps

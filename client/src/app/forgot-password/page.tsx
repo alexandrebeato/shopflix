@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FiArrowLeft } from 'react-icons/fi';
@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 
 import ThemeSwitcher from '@/components/ThemeSwitcher';
+import Button from '@/components/Button';
 
 const validationSchema = z.object({
   email: z
@@ -20,6 +21,7 @@ type FormProps = z.infer<typeof validationSchema>;
 
 export default function ForgotPassword(): JSX.Element {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -38,6 +40,7 @@ export default function ForgotPassword(): JSX.Element {
   const handleFormSubmit: SubmitHandler<FormProps> = async (
     data: FormProps
   ): Promise<void> => {
+    setLoading(true);
     console.log(data);
   };
 
@@ -99,13 +102,11 @@ export default function ForgotPassword(): JSX.Element {
             </div>
 
             <div className="mt-8">
-              <button
-                type="submit"
-                disabled={Object.entries(errors).length > 0}
-                className="w-full cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
-              >
-                Enviar
-              </button>
+              <Button
+                disabled={Object.entries(errors).length > 0 || loading}
+                text="Enviar"
+                loading={loading}
+              />
             </div>
           </form>
         </div>
