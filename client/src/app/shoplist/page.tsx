@@ -225,7 +225,7 @@ export default function ShopList(): JSX.Element {
                 return (
                   <div key={item.id ?? idx} className="flex ml-2 items-start">
                     <li
-                      className={`capitalize ml-4 w-full transition-all duration-200 hover:cursor-pointer break-all inline-flex `}
+                      className={`ml-4 w-full transition-all duration-200 hover:cursor-pointer break-all inline-flex `}
                       key={idx}
                     >
                       {item.description === '' && (
