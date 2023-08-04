@@ -17,22 +17,22 @@ public class ItemHandler :
     {
         _repository = repository;
     }
-    
+
     public GenericCommandResult Handle(CreateItemCommand command)
     {
-        
+
         command.Validate();
         if (!command.IsValid)
             return new GenericCommandResult(false,
                 "Oops, looks like anything is incorrect!",
                 null,
-                command.Notifications.Select(x => new {x.Key, x.Message}));
+                command.Notifications.Select(x => new { x.Key, x.Message }));
 
-        var item = Items.Item.Factory.Create(command.UserId, command.Description, command.Quantity, command.Image);
+        var item = Items.Item.Factory.Create(command.UserId, command.Description);
 
         _repository.Insert(item);
-        
-        return new GenericCommandResult(true, "Item was created", item,null);
+
+        return new GenericCommandResult(true, "Item was created", item, null);
     }
 
     public GenericCommandResult Handle(MarkItemAsPurchasedCommand command)
@@ -50,6 +50,14 @@ public class ItemHandler :
         var item = _repository.GetAndValidateOwner(command.ItemId, command.UserId).Result;
         if (item == null) return new GenericCommandResult(false, "Item not found", item, null);
         _repository.Delete(item.Id);
-        return new GenericCommandResult(true, "Item was deleted", null,null);
+        return new GenericCommandResult(true, "Item was deleted", null, null);
+    }
+
+    public GenericCommandResult Handle(DeleteItemsCommand command)
+    {
+        var items = _repository.GetByUser(command.UserId).Result;
+        if (items == null) return new GenericCommandResult(false, "Item not found", items, null);
+        _repository.DeleteItems(items);
+        return new GenericCommandResult(true, "Items were deleted", null, null);
     }
 }

@@ -7,6 +7,7 @@ namespace Core.Domain.Interfaces
         Task Insert(T entity);
         Task Update(T entity);
         Task Delete(Guid id);
+        Task DeleteItems(List<T> items);
         Task<T> GetById(Guid id);
     }
 }

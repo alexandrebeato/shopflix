@@ -10,11 +10,8 @@ namespace API.Models.Items
         [JsonProperty("userId")]
         public Guid UserId { get; set; }
 
-        [JsonProperty("description")] 
+        [JsonProperty("description")]
         public string Description { get; set; } = null!;
-
-        [JsonProperty("quantity")]
-        public double Quantity { get; set; }
 
         [JsonProperty("isPurchased")]
         public bool IsPurchased { get; set; }
@@ -25,7 +22,5 @@ namespace API.Models.Items
         [JsonProperty("purchasedAt")]
         public DateTime PurchasedAt { get; set; }
 
-        [JsonProperty("image")]
-        public string? Image { get; set; }
     }
 }

@@ -7,18 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-    [ApiController]
-    [Route("items")]
-    public class ItemController : BaseController
-    {
-        public ItemController(IUser user) : base(user) {}
-        
+[ApiController]
+[Route("items")]
+public class ItemController : BaseController
+{
+    public ItemController(IUser user) : base(user) { }
+
     [HttpPost]
     [Route("")]
     [Authorize]
     public IActionResult Create(
-        [FromBody]CreateItemCommand command,
-        [FromServices]ItemHandler handler)
+        [FromBody] CreateItemCommand command,
+        [FromServices] ItemHandler handler)
     {
         command.UserId = (Guid)UserId!;
         if (!ModelState.IsValid)
@@ -38,12 +38,12 @@ namespace API.Controllers;
             return StatusCode(500, new GenericCommandResult(false, "Internal server error!", null, null));
         }
     }
-    
+
     [HttpGet]
     [Route("")]
     [Authorize]
     public IActionResult GetAllByUser(
-        [FromServices]IItemRepository repository)
+        [FromServices] IItemRepository repository)
     {
         if (!ModelState.IsValid)
             return BadRequest(new GenericCommandResult(false,
@@ -62,13 +62,13 @@ namespace API.Controllers;
             return StatusCode(500, new GenericCommandResult(false, "Internal server error!", null, null));
         }
     }
-    
+
     [HttpPost]
     [Route("purchase")]
     [Authorize]
     public IActionResult MarkAsPurchase(
-        [FromBody]MarkItemAsPurchasedCommand command,
-        [FromServices]ItemHandler handler)
+        [FromBody] MarkItemAsPurchasedCommand command,
+        [FromServices] ItemHandler handler)
     {
         if (!ModelState.IsValid)
             return BadRequest(new GenericCommandResult(false,
@@ -88,15 +88,36 @@ namespace API.Controllers;
             return StatusCode(500, new GenericCommandResult(false, "Internal server error!", null, null));
         }
     }
-    
-    [HttpGet]
+
+    [HttpDelete]
     [Route("{id:guid}")]
     [Authorize]
     public IActionResult Delete(
-        [FromRoute]Guid id,
-        [FromServices]ItemHandler handler)
+        [FromRoute] Guid id,
+        [FromServices] ItemHandler handler)
     {
         var command = new DeleteItemCommand(id, (Guid)UserId!);
+
+        try
+        {
+            var result = handler.Handle(command);
+
+            return StatusCode(result.Success == false ? 403 : 204, result);
+        }
+        catch
+        {
+            return StatusCode(500, new GenericCommandResult(false, $"Internal server error!", null, null));
+        }
+    }
+
+    [HttpDelete]
+    [Route("list/{id:guid}")]
+    [Authorize]
+    public IActionResult DeleteItems(
+        [FromRoute] Guid id,
+        [FromServices] ItemHandler handler)
+    {
+        var command = new DeleteItemsCommand(id, (Guid)UserId!);
 
         try
         {
