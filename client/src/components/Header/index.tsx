@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { FiLogOut } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
-import shopflixLogo from '../../assets/images/shopflix.png';
 import ThemeSwitcher from '../ThemeSwitcher';
 import { type ShoplistProps } from '@/app/shoplist/page';
 
@@ -37,7 +36,7 @@ export default function Header({ setShoplist }: HeaderProps): JSX.Element {
   return (
     <header className="flex items-center h-20 p-6 justify-between flex-wrap bg-[#DCDDE0] dark:bg-[#111726] sm:flex-col sm:h-fit">
       <Image
-        src={shopflixLogo}
+        src="/img/shopflix.png"
         width={130}
         height={100}
         alt="Shopflix Logo"

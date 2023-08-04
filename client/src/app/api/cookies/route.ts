@@ -1,12 +1,40 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { serialize } from 'cookie';
+import { NextResponse, type NextRequest } from 'next/server';
+import { parse, serialize } from 'cookie';
+import { type JwtPayload, decode } from 'jsonwebtoken';
 
 import { COOKIE_NAME, MAX_AGE } from '@/constants/cookies';
+
+export async function GET(request: NextRequest): Promise<Response> {
+  const cookies = parse(request.headers?.get('cookie') as string);
+
+  if (!cookies) {
+    return new NextResponse('Error in retrieving cookie', {
+      status: 400
+    });
+  }
+
+  const cookieObject = {
+    token: cookies.token,
+    userData: JSON.parse(cookies.userData)
+  };
+
+  return new NextResponse(JSON.stringify(cookieObject), {
+    status: 200
+  });
+}
 
 export async function POST(request: NextRequest): Promise<Response> {
   const body = await request.json();
 
   const { token } = body;
+
+  const decodedToken = decode(token) as Partial<JwtPayload>;
+
+  const userData = {
+    userId: decodedToken.unique_name,
+    email: decodedToken.email,
+    username: decodedToken.given_name
+  };
 
   const serialized = serialize(COOKIE_NAME, token, {
     httpOnly: true,
@@ -15,10 +43,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     path: '/'
   });
 
-  return NextResponse.json('Cookie set with success.', {
-    status: 200,
-    headers: { 'Set-Cookie': serialized }
+  const serializedUser = serialize('userData', JSON.stringify(userData), {
+    httpOnly: false,
+    sameSite: 'strict',
+    maxAge: MAX_AGE,
+    path: '/'
   });
+
+  const response = new NextResponse('Token set with success!', { status: 200 });
+
+  response.headers.append('Set-Cookie', serialized);
+  response.headers.append('Set-Cookie', serializedUser);
+
+  return response;
 }
 
 export async function DELETE(request: Request): Promise<Response> {
@@ -26,6 +63,13 @@ export async function DELETE(request: Request): Promise<Response> {
 
   response.cookies.set({
     name: COOKIE_NAME,
+    value: '',
+    maxAge: 0,
+    path: '/'
+  });
+
+  response.cookies.set({
+    name: 'userData',
     value: '',
     maxAge: 0,
     path: '/'

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FiArrowLeft } from 'react-icons/fi';
@@ -8,7 +8,30 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import ThemeSwitcher from '@/components/ThemeSwitcher';
-import shopflixLogo from '../../assets/images/shopflix.png';
+import Button from '@/components/Button';
+import { type AxiosError } from 'axios';
+import api from '@/services/api';
+import { toast } from 'react-toastify';
+
+interface RegisterProps {
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: {
+      name: string;
+      email: string;
+      id: string;
+      createdAt: string;
+    };
+    token: string;
+  };
+}
 
 const validationSchema = z
   .object({
@@ -55,8 +78,39 @@ export default function Register(): JSX.Element {
     }
   });
 
-  const handleFormSubmit: SubmitHandler<FormProps> = (data: FormProps): any => {
-    console.log(data);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleFormSubmit: SubmitHandler<FormProps> = async (
+    data: FormProps
+  ): Promise<void> => {
+    try {
+      const payload = {
+        name: data.name,
+        email: data.email,
+        password: data.password
+      };
+
+      setLoading(true);
+
+      await api.post<RegisterProps, RegisterResponse>(
+        payload,
+        '/users/register'
+      );
+
+      toast.success('Usuário registrado com sucesso!');
+
+      setLoading(false);
+
+      router.push('/');
+    } catch (e) {
+      setLoading(false);
+      const error = e as AxiosError;
+      toast.error(
+        error.response?.status === 403
+          ? 'E-mail já cadastrado.'
+          : 'Ocorreu um erro ao registrar o usuário, tente novamente.'
+      );
+    }
   };
 
   useEffect(() => {
@@ -87,7 +141,7 @@ export default function Register(): JSX.Element {
         />
         <div className="flex text-center flex-col items-center justify-center">
           <Image
-            src={shopflixLogo}
+            src="/img/shopflix.png"
             width={200}
             height={200}
             alt="Shopflix Logo"
@@ -206,13 +260,11 @@ export default function Register(): JSX.Element {
             </div>
 
             <div className="mt-8 sm:mt-14">
-              <button
-                type="submit"
+              <Button
+                loading={loading}
                 disabled={Object.entries(errors).length > 0}
-                className="w-full cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
-              >
-                Registrar-se
-              </button>
+                text="Registrar-se"
+              />
             </div>
           </form>
         </div>

@@ -1,8 +1,9 @@
-import axios, {
+import {
   type AxiosResponse,
   type AxiosInstance,
   type AxiosRequestConfig
 } from 'axios';
+import { axiosInstance } from './interceptor';
 
 interface AxiosFunctionsProps {
   get: <T>(
@@ -26,11 +27,6 @@ interface AxiosFunctionsProps {
     config?: AxiosRequestConfig
   ) => Promise<AxiosResponse<T>>;
 }
-
-// TODO: Environment variables
-const axiosiInstance = axios.create({
-  baseURL: 'http://localhost:5011'
-});
 
 const api = (axios: AxiosInstance): AxiosFunctionsProps => {
   return {
@@ -73,4 +69,4 @@ const api = (axios: AxiosInstance): AxiosFunctionsProps => {
   };
 };
 
-export default api(axiosiInstance);
+export default api(axiosInstance);

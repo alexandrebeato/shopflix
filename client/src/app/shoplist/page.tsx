@@ -1,59 +1,122 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Comic_Neue } from 'next/font/google';
+import { type AxiosResponse, type AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
+import api from '@/services/api';
 import Header from '../../components/Header';
 import '../input.css';
+import { type CookieResponse } from '@/services/interceptor';
 
-export interface ShoplistProps {
-  text: string;
-  checked: boolean;
+interface CreateItemProps {
+  userId: string;
+  description: string;
+}
+
+interface ItemProps {
+  userId?: string;
+  description: string;
+  isPurchased: boolean;
+  purchasedAt?: string;
+  id?: string;
+  createdAt?: string;
 }
 
 const comicNeue = Comic_Neue({ subsets: ['latin'], weight: '400' });
 
+async function getItems(): Promise<ItemProps[] | undefined> {
+  try {
+    const res = await api.get<AxiosResponse>('/items', {});
+
+    return res.data.data;
+  } catch (e) {
+    const error = e as AxiosError;
+    console.log(error);
+  }
+}
+
 export default function ShopList(): JSX.Element {
-  const [shoplist, setShoplist] = useState<ShoplistProps[]>([]);
+  const [shoplist, setShoplist] = useState<ItemProps[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  console.log(shoplist);
+
   useEffect(() => {
-    setShoplist([
-      {
-        text: '',
-        checked: false
-      }
-    ]);
+    (async () => {
+      const items = await getItems();
+      setShoplist(items as ItemProps[]);
+      setShoplist(
+        (prevShoplist: ItemProps[]): ItemProps[] =>
+          [
+            ...prevShoplist,
+            { description: '', isPurchased: 'false' }
+          ] as ItemProps[]
+      );
+    })();
   }, []);
 
   function handleCheckedChange(idx: number): void {
     setShoplist((prevShoplist) =>
       prevShoplist.map((item, index) =>
-        index === idx ? { ...item, checked: !item.checked } : item
+        index === idx ? { ...item, isPurchased: !item.isPurchased } : item
       )
     );
   }
 
-  function handleAddItem(
+  async function handleAddItem(
     idx: number,
     event: React.KeyboardEvent<HTMLInputElement>
-  ): void {
+  ): Promise<void> {
     if (event.key === 'Enter') {
       const inputValue = inputRef.current?.value ?? '';
       if (inputValue.trim() !== '') {
-        setShoplist((prevShoplist) =>
-          prevShoplist.map((item, index) =>
-            index === idx ? { checked: false, text: inputValue } : item
-          )
-        );
+        try {
+          const cookies = await api.get<CookieResponse>(
+            '/api/cookies',
+            {},
+            'http://localhost:3000'
+          );
 
-        setShoplist((prevShoplist) => [
-          ...prevShoplist,
-          { checked: false, text: '' }
-        ]);
+          const payload = {
+            userId: cookies.data.userData.userId,
+            description: inputValue
+          };
 
-        // Clear the input value after adding the new item
-        if (inputRef.current !== null) {
-          inputRef.current.value = '';
+          const updatedItem = await api.post<CreateItemProps, any>(
+            payload,
+            '/items'
+          );
+
+          console.log(updatedItem);
+
+          // if (inputRef?.current !== null) {
+          //   inputRef.current.value = '';
+          // }
+
+          setShoplist((prevShoplist: ItemProps[]): ItemProps[] =>
+            prevShoplist.map((item, index) =>
+              index === idx ? updatedItem.data.data : item
+            )
+          );
+
+          setShoplist((prevShoplist: ItemProps[]): ItemProps[] => {
+            return [
+              ...prevShoplist,
+              { description: '', isPurchased: 'false' }
+            ] as ItemProps[];
+          });
+
+          toast.success('Item registrado com sucesso!');
+        } catch (e) {
+          const error = e as AxiosError;
+          console.log(error, 'ERRO POST');
+          toast.error(
+            error.response?.status === 403
+              ? 'O nome do item precisa ter mais de 2 caracteres.'
+              : 'Ocorreu um erro ao registrar o item, tente novamente.'
+          );
         }
       }
     }
@@ -73,7 +136,7 @@ export default function ShopList(): JSX.Element {
         >
           <div className="absolute bg-gradient-linear-lines bg-[length:30px_30px] left-[60px] right-0 inset-y-[20px] overflow-y-auto">
             <ul className="text-[#555] text-[22px]">
-              {shoplist.map((item: ShoplistProps, idx: number) => {
+              {shoplist?.map((item: ItemProps, idx: number) => {
                 return (
                   <div key={idx} className="flex ml-2 items-start">
                     <li
@@ -83,31 +146,30 @@ export default function ShopList(): JSX.Element {
                       }}
                       key={idx}
                     >
-                      {item.text === '' && (
+                      {item.description === '' && (
                         <input
                           ref={inputRef}
                           className="inline select-none border-none outline-none bg-transparent w-full"
-                          onKeyDown={(e) => {
-                            handleAddItem(idx, e);
-                            inputRef.current?.focus();
+                          onKeyDown={async (e) => {
+                            await handleAddItem(idx, e);
                           }}
                         />
                       )}
-                      {item.text !== '' && (
+                      {item.description !== '' && (
                         <p
                           className={`inline select-none ${
-                            item.checked ? 'line-through' : ''
+                            item.isPurchased ? 'line-through' : ''
                           }`}
                         >
-                          {item.text}
+                          {item.description}
                         </p>
                       )}
-                      {item.text === '' && (
+                      {item.description === '' && (
                         <span
-                          className="absolute right-3 text-2xl font-bold"
+                          className="absolute right-3 text-xl font-bold cursor-default"
                           onClick={() => {}}
                         >
-                          +
+                          ←
                         </span>
                       )}
                     </li>

@@ -8,13 +8,11 @@ import { useTheme } from 'next-themes';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
-import shopflixLogo from '../assets/images/shopflix.png';
-import shopflixBackground from '../assets/images/shopflix-bg.png';
-import shopflixWhiteBackground from '../assets/images/shopflix-bg-white.png';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import api from '@/services/api';
-import Spinner from '@/components/Spinner';
+import Button from '@/components/Button';
 
 const validationSchema = z.object({
   email: z
@@ -63,7 +61,7 @@ export default function Login(): JSX.Element {
 
   const handleFormSubmit: SubmitHandler<FormProps> = async (
     data: FormProps
-  ): Promise<any> => {
+  ): Promise<void> => {
     try {
       const payload = {
         email: data.email,
@@ -84,13 +82,19 @@ export default function Login(): JSX.Element {
         'http://localhost:3000'
       );
 
+      toast.success('Usuário autenticado com sucesso!');
+
       setLoading(false);
 
       router.push('/shoplist');
     } catch (e) {
       setLoading(false);
       const error = e as AxiosError;
-      console.log(error);
+      toast.error(
+        error.response?.status === 401
+          ? 'Email ou senha incorreto.'
+          : 'Ocorreu um erro ao entrar, tente novamente.'
+      );
     }
   };
 
@@ -111,8 +115,8 @@ export default function Login(): JSX.Element {
           style={{
             backgroundImage: `${
               theme === 'light'
-                ? `url(${shopflixWhiteBackground.src})`
-                : `url(${shopflixBackground.src})`
+                ? 'url(/img/shopflix-bg-white.png)'
+                : 'url(/img/shopflix-bg.png)'
             }`,
             backgroundPosition: 'center'
           }}
@@ -136,7 +140,7 @@ export default function Login(): JSX.Element {
           <div className="flex-1 ">
             <div className="flex text-center flex-col items-center justify-center">
               <Image
-                src={shopflixLogo}
+                src="/img/shopflix.png"
                 width={200}
                 height={200}
                 alt="Shopflix Logo"
@@ -207,13 +211,11 @@ export default function Login(): JSX.Element {
                 </div>
 
                 <div className="mt-10 sm:mt-11">
-                  <button
-                    type="submit"
+                  <Button
                     disabled={Object.entries(errors).length > 0 || loading}
-                    className="w-full h-10 flex items-center justify-center cursor-pointer px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md  disabled:bg-blue-400 disabled:cursor-default focus:outline-none "
-                  >
-                    {loading ? <Spinner /> : 'Entrar'}
-                  </button>
+                    text="Entrar"
+                    loading={loading}
+                  />
                 </div>
               </form>
 

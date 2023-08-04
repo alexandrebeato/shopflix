@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 
-import shopflixLogo from '../../assets/images/shopflix.png';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 const validationSchema = z.object({
@@ -36,7 +35,9 @@ export default function ForgotPassword(): JSX.Element {
     }
   });
 
-  const handleFormSubmit: SubmitHandler<FormProps> = (data: FormProps): any => {
+  const handleFormSubmit: SubmitHandler<FormProps> = async (
+    data: FormProps
+  ): Promise<void> => {
     console.log(data);
   };
 
@@ -59,7 +60,7 @@ export default function ForgotPassword(): JSX.Element {
             }}
           />
           <Image
-            src={shopflixLogo}
+            src="/img/shopflix.png"
             width={200}
             height={200}
             alt="Shopflix Logo"
