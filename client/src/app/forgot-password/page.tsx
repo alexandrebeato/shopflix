@@ -41,7 +41,6 @@ export default function ForgotPassword(): JSX.Element {
     data: FormProps
   ): Promise<void> => {
     setLoading(true);
-    console.log(data);
   };
 
   useEffect(() => {

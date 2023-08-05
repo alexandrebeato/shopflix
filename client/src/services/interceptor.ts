@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import api from './api';
 
 export interface CookieResponse {
@@ -25,7 +26,6 @@ axiosInstance.interceptors.request.use(
 
       const token = res.data?.token;
 
-      // console.log(token);
       // Modify the request config for "/items" routes
       // For example, add authentication token or other headers
       config.headers.Authorization = `Bearer ${token}`;

@@ -3,7 +3,8 @@ import {
   type AxiosInstance,
   type AxiosRequestConfig
 } from 'axios';
-import { axiosInstance } from './interceptor';
+
+import { axiosInstance } from '.';
 
 interface AxiosFunctionsProps {
   get: <T>(

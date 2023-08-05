@@ -1,4 +1,3 @@
-import { type Dispatch, type SetStateAction } from 'react';
 import Image from 'next/image';
 import { FiLogOut } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
@@ -6,19 +5,10 @@ import { toast } from 'react-toastify';
 
 import ThemeSwitcher from '../ThemeSwitcher';
 import api from '@/services/api';
-import { type ItemProps } from '@/app/shoplist/page';
+import { useShoplist } from '@/context/shoplistContext';
 
-interface HeaderProps {
-  userId: string;
-  setShoplist: Dispatch<SetStateAction<ItemProps[]>>;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}
-
-export default function Header({
-  userId,
-  setShoplist,
-  setLoading
-}: HeaderProps): JSX.Element {
+export function Header(): JSX.Element {
+  const { setShoplist, userId, setLoading } = useShoplist();
   const router = useRouter();
 
   async function handleClearList(): Promise<void> {

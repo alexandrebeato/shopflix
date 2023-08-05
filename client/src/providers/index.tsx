@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider, useTheme } from 'next-themes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ShoplistProvider } from '@/context/shoplistContext';
 
 export const Providers = ({
   children
@@ -23,15 +24,17 @@ export const Providers = ({
   }
 
   return (
-    <ThemeProvider attribute="class">
-      <ToastContainer
-        theme={theme === 'dark' ? 'dark' : 'light'}
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-      />
-      {children}
-    </ThemeProvider>
+    <ShoplistProvider>
+      <ThemeProvider attribute="class">
+        <ToastContainer
+          theme={theme === 'dark' ? 'dark' : 'light'}
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick
+        />
+        {children}
+      </ThemeProvider>
+    </ShoplistProvider>
   );
 };
