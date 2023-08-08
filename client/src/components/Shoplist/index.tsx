@@ -168,6 +168,7 @@ export function ShopList(): JSX.Element {
                       className="inline select-none border-none outline-none bg-transparent w-full"
                       onKeyDown={async (e) => {
                         await handleAddItem(e, idx);
+                        inputRef.current?.focus();
                       }}
                     />
                   )}

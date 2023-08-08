@@ -18,7 +18,7 @@ namespace Infra.Data
             ConventionRegistry.Register("elementNameConvention", pack, x => true);
             _configuration = configuration;
             _mongoClient = mongoClient;
-            _mongoCollection = _mongoClient.GetDatabase(_configuration["mongoConnection:database"]).GetCollection<T>(typeof(T).Name.ToLower());
+            _mongoCollection = _mongoClient.GetDatabase(_configuration["ShopFlix"]).GetCollection<T>(typeof(T).Name.ToLower());
         }
 
         public Task Insert(T entity) =>

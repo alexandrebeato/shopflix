@@ -53,13 +53,8 @@ export const ShoplistProvider: React.FC<{ children: ReactNode }> = ({
         const userId = await fetchUserId();
         setUserId(userId);
         const items = await fetchItems();
+        items.push({ description: '', isPurchased: false });
         setShoplist(items);
-        setShoplist((previousShoplist: ItemProps[]): ItemProps[] => {
-          return [
-            ...previousShoplist,
-            { description: '', isPurchased: 'false' }
-          ] as ItemProps[];
-        });
         setLoading(false);
       } catch (error) {
         setLoading(false);

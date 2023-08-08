@@ -5,13 +5,15 @@ import { type JwtPayload, decode } from 'jsonwebtoken';
 import { COOKIE_NAME, MAX_AGE } from '@/constants/cookies';
 
 export async function GET(request: NextRequest): Promise<Response> {
-  const cookies = parse(request.headers?.get('cookie') as string);
+  const headers = request.headers?.get('cookie');
 
-  if (!cookies) {
-    return new NextResponse('Error in retrieving cookie', {
-      status: 400
+  if (!headers) {
+    return new NextResponse(JSON.stringify({}), {
+      status: 200
     });
   }
+
+  const cookies = parse(request.headers?.get('cookie') as string);
 
   const cookieObject = {
     token: cookies.token,

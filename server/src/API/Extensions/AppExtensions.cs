@@ -52,7 +52,7 @@ public static class AppExtensions
 
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
-        var connectionString = builder.Configuration["mongoConnection:server"];
+        var connectionString = builder.Configuration["mongoConnection"];
 
         // Mongo database
         var mongoClient = new MongoClient(connectionString);
