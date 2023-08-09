@@ -41,13 +41,13 @@ const api = (axios: AxiosInstance): AxiosFunctionsProps => {
         `${
           url !== undefined
             ? `${url}${endpoint}`
-            : `http://localhost:5011${endpoint}`
+            : `${process.env.API_URL as string}${endpoint}`
         }`,
         config
       );
     },
     put: async function <T>(body: unknown, config: AxiosRequestConfig = {}) {
-      return await axios.put<T>('http://localhost:5011', body, config);
+      return await axios.put<T>(process.env.API_URL as string, body, config);
     },
     post: async function <T, U>(
       body: T,
@@ -59,7 +59,7 @@ const api = (axios: AxiosInstance): AxiosFunctionsProps => {
         `${
           url !== undefined
             ? `${url}${endpoint}`
-            : `http://localhost:5011${endpoint}`
+            : `${process.env.API_URL as string}${endpoint}`
         }`,
         body,
         config
@@ -74,7 +74,7 @@ const api = (axios: AxiosInstance): AxiosFunctionsProps => {
         `${
           url !== undefined
             ? `${url}${endpoint}`
-            : `http://localhost:5011${endpoint}`
+            : `${process.env.API_URL as string}${endpoint}`
         }`,
         config
       );

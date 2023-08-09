@@ -12,7 +12,7 @@ export interface CookieResponse {
 }
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5011'
+  baseURL: process.env.API_URL as string
 });
 // Define the Axios interceptor for "/items" routes
 axiosInstance.interceptors.request.use(

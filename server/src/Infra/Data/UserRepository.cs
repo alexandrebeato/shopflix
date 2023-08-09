@@ -7,12 +7,12 @@ namespace Infra.Data
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(IConfiguration configuration, IMongoClient mongoClient) : base(configuration, mongoClient) { }
-        
+        public UserRepository(IMongoClient mongoClient) : base(mongoClient) { }
+
         public async Task<User> GetByEmail(string email)
         {
             return await _mongoCollection.Find(x => x.Email == email).FirstOrDefaultAsync();
         }
-            
+
     }
 }
