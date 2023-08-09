@@ -11,11 +11,6 @@
     "format": "prettier --write .",
     "check-format": "prettier --check ."
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
       "prettier --write",
