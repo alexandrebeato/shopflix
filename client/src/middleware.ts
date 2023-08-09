@@ -28,7 +28,6 @@ export default async function middleware(request: NextRequest) {
   if (decodedToken.exp && decodedToken.exp < now) {
     const response = NextResponse.redirect(signInUrl);
 
-    // implementar algum toast sepa.
     if (request.nextUrl.pathname === '/') {
       response.cookies.set({
         name: COOKIE_NAME,

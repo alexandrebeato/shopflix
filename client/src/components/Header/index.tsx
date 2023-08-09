@@ -8,14 +8,14 @@ import api from '@/services/api';
 import { useShoplist } from '@/context/shoplistContext';
 
 export function Header(): JSX.Element {
-  const { setShoplist, userId, setLoading } = useShoplist();
+  const { setShoplist, setLoading } = useShoplist();
   const router = useRouter();
 
   async function handleClearList(): Promise<void> {
     try {
       setLoading(true);
 
-      await api.delete(`/items/list/${userId}`);
+      await api.delete(`/items/list`);
 
       setShoplist([
         {
