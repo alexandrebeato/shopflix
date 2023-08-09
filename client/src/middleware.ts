@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { decode, type JwtPayload } from 'jsonwebtoken';
+import { jwtDecrypt } from 'jose';
 
 import { COOKIE_NAME } from '@/constants/cookies';
 
@@ -20,12 +20,14 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(signInUrl);
   }
 
-  const decodedToken = decode(token.value) as JwtPayload;
+  const decodedToken = await jwtDecrypt(token.value, {
+    type: 'string'
+  });
 
   // Now in milisseconds
   const now = Math.floor(Date.now() / 1000);
 
-  if (decodedToken.exp && decodedToken.exp < now) {
+  if (decodedToken.payload?.exp && decodedToken.payload?.exp < now) {
     const response = NextResponse.redirect(signInUrl);
 
     if (request.nextUrl.pathname === '/') {
